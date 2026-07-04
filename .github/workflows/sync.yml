@@ -61,4 +61,20 @@ jobs:
         with:
           repository: tengkongworld/tengkongworld.github.io
           token: ${{ secrets.DEPLOY_TOKEN }}
-          path: deploy    
+          path: deploy
+
+      - name: Sync build to deployment repository
+        run: |
+          echo "Cleaning deployment repository..."
+
+          find deploy -mindepth 1 \
+            ! -path "deploy/.git*" \
+            -delete
+
+          echo "Copy build..."
+
+          cp -R build/. deploy/
+
+          echo "Deployment repository contents:"
+
+          ls -la deploy        
