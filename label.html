@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>分类浏览 - 腾空世界观档案馆</title>
+
+<style>
+
+body{
+    max-width:900px;
+    margin:auto;
+    padding:20px;
+    font-family:Arial, Helvetica, sans-serif;
+    line-height:1.8;
+}
+
+a{
+    text-decoration:none;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<p>
+<a href="index.html">← 返回首页</a>
+</p>
+
+<h1 id="title">分类加载中...</h1>
+
+<ul id="articles">
+</ul>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+const labelName = params.get("name");
+
+document.getElementById("title").innerText =
+    labelName || "分类浏览";
+
+fetch("data/articles.json")
+.then(response => response.json())
+.then(data => {
+
+    const articles = data.filter(article =>
+        article.labels.includes(labelName)
+    );
+
+    const list = document.getElementById("articles");
+
+    let html = "";
+
+    articles.forEach(article => {
+
+        html += `
+            <li>
+                <strong>${article.published}</strong>
+                -
+                <a href="article.html?id=${article.id}">
+                    ${article.title}
+                </a>
+            </li>
+        `;
+
+    });
+
+    if (articles.length === 0) {
+        html = "<li>该分类暂无文章</li>";
+    }
+
+    list.innerHTML = html;
+
+});
+
+</script>
+
+</body>
+</html>

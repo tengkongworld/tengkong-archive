@@ -1,2 +1,1 @@
-# tengkong-archive
-Archive backup of Tengkong World Blogger content.
+# tengkongworld.github.io

@@ -1,0 +1,166 @@
+body {
+
+    max-width: 900px;
+
+    margin: auto;
+
+    padding: 20px;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    line-height: 1.8;
+
+}
+
+img {
+
+    max-width: 100%;
+
+    height: auto;
+
+}
+
+.language-switcher {
+
+    text-align: right;
+
+    margin-bottom: 16px;
+
+    font-size: 14px;
+
+    color: #666;
+
+}
+
+.language-switcher a {
+
+    color: inherit;
+
+}
+
+.language-switcher .current-language {
+
+    font-weight: bold;
+
+    color: #333;
+
+}
+
+/* ===== 阅读偏好 ===== */
+
+.reading-options {
+
+    margin: 12px 0;
+
+}
+
+.reading-options-group {
+
+    display: flex;
+
+    align-items: center;
+
+    margin: 5px 0;
+
+}
+
+.reading-label {
+
+    width: 48px;
+
+    flex-shrink: 0;
+
+    color: #999;
+
+    font-size: 14px;
+
+}
+
+.reading-buttons,
+.font-buttons {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+.theme-button,
+.font-buttons button {
+
+    background: none;
+
+    border: none;
+
+    padding: 2px 6px;
+
+    margin: 0;
+
+    font: inherit;
+
+    color: #444;
+
+    cursor: pointer;
+
+    border-radius: 4px;
+
+    transition: background .2s, color .2s;
+
+}
+
+.theme-button:hover,
+.font-buttons button:hover {
+
+    background: #f3f3f3;
+
+}
+
+.theme-button.active {
+
+    background: #2563eb;
+
+    color: #fff;
+
+}
+
+#font-size {
+
+    min-width: 22px;
+
+    text-align: center;
+
+    color: #666;
+
+    font-size: 14px;
+
+}
+
+@media (max-width:600px) {
+
+    .reading-options-group {
+
+        flex-wrap: wrap;
+
+    }
+
+}
+
+/* ===== 正文字号 ===== */
+
+.article-content {
+
+    font-size: 18px;
+
+    line-height: 1.9;
+
+}
+
+.article-content img {
+
+    max-width: 100%;
+
+    height: auto;
+
+}

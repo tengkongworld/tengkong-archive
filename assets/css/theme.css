@@ -1,0 +1,100 @@
+        .active {
+
+            background: #3b82f6;
+
+            color: white;
+
+            border-color: #3b82f6;
+
+        }
+
+        /* =========================
+   护眼模式
+========================= */
+
+        body.eye {
+
+            background: #f4f1e8;
+
+            color: #3a3a3a;
+
+        }
+
+        body.eye #continue-reading,
+        body.eye #today-recommend,
+        body.eye #random-explore,
+        body.eye .collection-card {
+
+            background: #faf7ee;
+
+        }
+
+
+        /* =========================
+   古籍模式
+========================= */
+
+        body.classic {
+
+            background: #efe4c8;
+
+            color: #4a3b2a;
+
+        }
+
+        body.classic #continue-reading,
+        body.classic #today-recommend,
+        body.classic #random-explore,
+        body.classic .collection-card {
+
+            background: #f4ecd2;
+
+        }
+
+
+        /* =========================
+   夜间模式
+========================= */
+
+        body.dark {
+
+            background: #1f1f1f;
+
+            color: #dddddd;
+
+        }
+
+        body.dark a {
+
+            color: #8ab4ff;
+
+        }
+
+        body.dark #continue-reading,
+        body.dark #today-recommend,
+        body.dark #random-explore,
+        body.dark .collection-card {
+
+            background: #2b2b2b;
+
+            border-color: #444;
+
+        }
+
+        body.dark img {
+
+            box-shadow:
+                0 0 12px rgba(255,
+                    255,
+                    255,
+                    0.08);
+
+        }
+
+        body.dark .theme-active {
+
+            background: #8ab4ff;
+
+            color: #111;
+
+        }

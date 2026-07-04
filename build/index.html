@@ -1,0 +1,2161 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>腾空世界观档案馆开源中心</title>
+    <meta name="description" content="腾空世界观公开资料档案馆，提供文章归档、分类索引与长期保存。">
+    <link rel="alternate" hreflang="zh-CN" href="/">
+    <link rel="alternate" hreflang="zh-TW" href="/tc/">
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <style>
+        /* =========================
+   基础样式
+========================= */
+
+        body {
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            padding: 20px;
+
+            line-height: 1.8;
+
+            font-size: 18px;
+
+            background: #faf9f5;
+
+            color: #333;
+
+            transition:
+                background 0.3s ease,
+                color 0.3s ease;
+
+        }
+
+        h1 {
+
+            margin-top: 30px;
+
+            margin-bottom: 40px;
+
+        }
+
+        h2 {
+
+            margin-top: 0;
+
+            margin-bottom: 20px;
+
+        }
+
+        a {
+
+            text-decoration: none;
+
+        }
+
+        a:hover {
+
+            text-decoration: underline;
+
+        }
+
+        hr {
+
+            margin: 30px 0;
+
+        }
+
+
+        /* =========================
+   首页模块通用间距
+========================= */
+
+        #continue-reading:not(:empty),
+        #today-recommend,
+        #random-explore,
+        #recent-reading,
+        #collections {
+
+            margin: 30px 0;
+
+        }
+
+        #today-recommend {
+
+            transition:
+
+                transform 0.25s ease,
+
+                box-shadow 0.25s ease;
+
+        }
+
+        #today-recommend:hover {
+
+            transform:
+
+                translateY(-4px);
+
+            box-shadow:
+
+                0 10px 24px rgba(0, 0, 0, 0.08);
+
+        }
+
+        .recommend-image {
+
+            transition:
+                transform 0.35s ease;
+
+        }
+
+        .today-image {
+
+            width: 100%;
+
+            max-width: 500px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 12px rgba(0, 0, 0, 0.08);
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+
+            cursor: pointer;
+
+        }
+
+        .today-image:hover {
+
+            transform: scale(1.02);
+
+            box-shadow:
+                0 12px 28px rgba(0, 0, 0, 0.15);
+
+        }
+
+        #today-recommend:hover .recommend-image {
+
+            transform:
+                scale(1.03);
+
+        }
+
+
+        /* =========================
+   简介区域
+========================= */
+
+        .intro {
+
+            margin-bottom: 30px;
+
+        }
+
+
+        /* =========================
+   首页卡片
+========================= */
+
+        #continue-reading:not(:empty),
+        #today-recommend,
+        #random-explore {
+
+            padding: 24px;
+
+            border-radius: 16px;
+
+            background: #fffdfa;
+
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.05);
+
+        }
+
+
+        /* =========================
+   数字展厅
+========================= */
+
+        #collections {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit,
+                    minmax(250px,
+                        1fr));
+
+            gap: 24px;
+
+        }
+
+        .collection-card {
+
+            position: relative;
+
+            overflow: hidden;
+
+            background: #fffdfa;
+
+            border: 1px solid #ddd;
+
+            border-radius: 12px;
+
+            padding: 15px;
+
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.05);
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+
+        }
+
+        .collection-card:hover {
+
+            transform:
+                translateY(-6px);
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.12);
+
+        }
+
+        .collection-card img {
+
+            width: 100%;
+
+            height: auto;
+
+            border-radius: 8px;
+
+            transition:
+                transform 0.3s ease;
+
+        }
+
+        .collection-card:hover img {
+
+            transform:
+                scale(1.02);
+
+        }
+
+
+        /* =========================
+   按钮
+========================= */
+
+        button {
+
+            padding: 8px 14px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            background: white;
+
+            cursor: pointer;
+
+            margin-right: 8px;
+
+            transition:
+                all 0.2s ease;
+
+        }
+
+        button:hover {
+
+            background: #f0f0f0;
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 4px 12px rgba(0, 0, 0, 0.15);
+
+        }
+
+
+
+
+        .collection-count {
+
+            margin-top: 12px;
+
+            font-size: 0.95em;
+
+            color: #777;
+
+        }
+
+        body.dark .collection-count {
+
+            color: #aaa;
+
+        }
+
+        .card-overlay {
+
+            position: absolute;
+
+            inset: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                rgba(0,
+                    0,
+                    0,
+                    0.65);
+
+            color: white;
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            opacity: 0;
+
+            transition:
+                opacity 0.3s ease;
+
+        }
+
+        .collection-card:hover .card-overlay {
+
+            opacity: 1;
+
+        }
+
+        .collection-link {
+
+            display: block;
+
+            text-decoration: none;
+
+            color: inherit;
+
+        }
+
+        .card-overlay {
+
+            pointer-events: none;
+
+        }
+
+        .recommend-badge {
+
+            display: inline-block;
+
+            padding: 6px 12px;
+
+            border-radius: 999px;
+
+            background: #f3e8ff;
+
+            color: #6b21a8;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            margin-bottom: 16px;
+
+        }
+
+        .continue-label {
+
+            color: #777;
+
+            font-size: 14px;
+
+            margin-bottom: 8px;
+
+        }
+
+        .continue-title {
+
+            font-size: 24px;
+
+            font-weight: bold;
+
+            line-height: 1.5;
+
+            margin-bottom: 20px;
+
+        }
+
+        .continue-progress {
+
+            color: #666;
+
+            margin-bottom: 8px;
+
+        }
+
+        .continue-level {
+
+            font-weight: bold;
+
+            color: #6b21a8;
+
+            margin-bottom: 20px;
+
+        }
+
+        .continue-button {
+
+            display: inline-block;
+
+            padding: 10px 18px;
+
+            border-radius: 999px;
+
+            background: #6b21a8;
+
+            color: white;
+
+            font-weight: bold;
+
+            text-decoration: none;
+
+            transition: all 0.2s ease;
+
+        }
+
+        .continue-button:hover {
+
+            transform:
+                translateY(-2px);
+
+        }
+
+        .explore-desc {
+
+            font-size: 18px;
+
+            margin-bottom: 12px;
+
+        }
+
+        #random-button {
+
+            padding: 12px 24px;
+
+            border-radius: 999px;
+
+            border: none;
+
+            background: #6b21a8;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition:
+                all 0.25s ease;
+
+        }
+
+        #random-button:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 8px 20px rgba(107, 33, 168, 0.25);
+
+        }
+
+        body.dark #random-button {
+
+            background: #8ab4ff;
+
+            color: #111;
+
+        }
+
+        .read-button {
+
+            display: inline-block;
+
+            padding: 12px 24px;
+
+            border-radius: 999px;
+
+            background: #6b21a8;
+
+            color: white !important;
+
+            font-weight: bold;
+
+            text-decoration: none;
+
+            transition:
+                all 0.25s ease;
+
+        }
+
+        .read-button:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 20px rgba(107, 33, 168, 0.25);
+
+            text-decoration: none;
+
+        }
+
+        #reading-backup {
+
+            margin-top: 20px;
+
+        }
+
+        #export-reading,
+
+        #import-reading {
+
+            padding: 10px 18px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            background: #6b21a8;
+
+            color: white;
+
+            font-weight: bold;
+
+            transition:
+                all 0.25s ease;
+
+        }
+
+        #export-reading:hover,
+
+        #import-reading:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 8px 20px rgba(107, 33, 168, 0.25);
+
+        }
+
+        #search-input {
+
+            width: 100%;
+
+            max-width: 500px;
+
+            padding: 12px;
+
+            font-size: 16px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            box-sizing: border-box;
+
+        }
+
+        .search-bar {
+
+            display: flex;
+
+            gap: 10px;
+
+            align-items: center;
+
+        }
+
+        #clear-search {
+
+            padding: 12px 18px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+        }
+
+        #search-results ul {
+
+            list-style: none;
+
+            padding-left: 0;
+
+        }
+
+        #search-results li {
+
+            margin-bottom: 15px;
+
+        }
+
+        .language-switcher {
+
+            text-align: right;
+
+            margin-bottom: 16px;
+
+            font-size: 14px;
+
+            color: #666;
+
+        }
+
+        .language-switcher a {
+
+            color: inherit;
+
+        }
+
+        .language-switcher .current-language {
+
+            font-weight: bold;
+
+            color: #333;
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="language-switcher">
+        <span class="current-language">简体中文</span>
+        ｜
+        <a href="/tc/">繁體中文</a>
+    </div>
+
+    <div class="intro">
+        <h1>腾空世界观档案馆开源中心</h1>
+
+        <p>
+            一个以长期保存、
+            开放传播与文献研究为目的的数字典藏系统。
+        </p>
+
+        <p>
+            内容来源于腾空的转述记录，
+            按照原始结构整理归档，
+            以保证资料的完整性与可追溯性。
+        </p>
+
+        <p>
+            所有资料均可自由阅读、
+            下载、保存、引用与转载。
+            任何时间点的版本都可作为独立档案保存。
+            本档案馆持续整理与扩充中。
+            欢迎个人收藏、镜像保存与长期归档。
+        </p>
+
+        <p>
+            为避免内容失真，
+            转载时应保持原文完整，
+            不得擅自修改原始记录内容。
+        </p>
+
+        <p>
+
+        </p>
+
+    </div>
+
+    <div id="archive-search">
+
+        <h2>
+            🔍 搜索馆藏
+        </h2>
+
+        <div class="search-bar">
+
+            <input type="text" id="search-input" placeholder="输入关键词搜索标题...">
+
+            <button id="clear-search">
+
+                清空
+
+            </button>
+
+        </div>
+
+        <div id="search-results"></div>
+
+    </div>
+
+    <div id="continue-reading">
+    </div>
+
+    <div id="today-recommend">
+
+        <h2>
+            今天从哪里开始？
+        </h2>
+
+        <p>
+            正在生成推荐...
+        </p>
+
+    </div>
+
+    <div id="recent-additions"></div>
+
+    <div id="random-explore">
+
+        <h2>
+            随机探索
+        </h2>
+
+        <p>
+            准备中...
+        </p>
+
+    </div>
+
+    <div id="recent-reading">
+    </div>
+
+    <!-- 这里新增 -->
+
+    <div id="theme-selector">
+
+        <h2>
+            阅读模式
+        </h2>
+
+        <button data-theme="default">
+            标准
+        </button>
+
+        <button data-theme="eye">
+            护眼
+        </button>
+
+        <button data-theme="dark">
+            夜间
+        </button>
+
+        <button data-theme="classic">
+            古籍
+        </button>
+
+    </div>
+
+    <hr>
+
+    <h2>数字展厅</h2>
+
+    <div id="collections">
+    </div>
+
+    <hr>
+
+    <h2>馆藏目录</h2>
+
+    <ul id="label-list">
+    </ul>
+
+    <hr>
+
+    <h2>档案统计</h2>
+
+    <div id="archive-stats">
+    </div>
+
+    <div id="reading-backup">
+
+        <button id="export-reading">
+
+            📥 导出阅读档案
+
+        </button>
+
+        <button id="import-reading">
+
+            📤 导入阅读档案
+
+        </button>
+
+        <input type="file" id="import-file" accept=".json" style="display:none">
+
+    </div>
+
+    <script src="assets/js/theme.js"></script>
+
+    <script>
+
+        function getReaderLevel(percent) {
+
+            if (percent < 5) {
+
+                return "初入馆";
+
+            } else if (percent < 15) {
+
+                return "文献浏览者";
+
+            } else if (percent < 30) {
+
+                return "文献探索者";
+
+            } else if (percent < 50) {
+
+                return "档案研究员";
+
+            } else if (percent < 70) {
+
+                return "馆藏学者";
+
+            } else if (percent < 90) {
+
+                return "档案守护者";
+
+            }
+
+            return "全馆通读";
+
+        }
+
+        Promise.all([
+            fetch('data/articles.json')
+                .then(response => response.json()),
+            fetch('data/homepage.json')
+                .then(response => response.json())
+        ])
+            .then(([data, collections]) => {
+
+                localStorage.setItem(
+
+                    "articleCount",
+
+                    data.length
+
+                );
+
+                const labels = {};
+                const labelSlugs = {};
+
+                data.forEach(article => {
+
+                    article.labels.forEach((label, index) => {
+
+                        labels[label] = (labels[label] || 0) + 1;
+
+                        if (
+                            article.label_slugs &&
+                            article.label_slugs[index]
+                        ) {
+
+                            labelSlugs[label] =
+                                article.label_slugs[index];
+
+                        }
+
+                    });
+
+                });
+
+                let html = '';
+
+                Object.keys(labels)
+                    .sort()
+                    .forEach(label => {
+
+                        html += `
+      <li>
+        <a href="labels/${labelSlugs[label]}.html">
+          ${label}
+        </a>
+        (${labels[label]})
+      </li>
+    `;
+
+                    });
+
+                document.getElementById(
+                    'label-list'
+                ).innerHTML = html;
+
+                const archive = JSON.parse(
+                    localStorage.getItem(
+                        "readingArchive"
+                    ) || "[]"
+                );
+
+                const readCount = archive.length;
+
+                const latestDate =
+
+                    data.reduce(
+
+                        (latest, article) =>
+
+                            article.published > latest
+
+                                ? article.published
+
+                                : latest,
+
+                        data[0].published
+
+                    );
+
+                const percent =
+
+                    data.length > 0
+
+                        ? Math.round(
+                            readCount * 100 /
+                            data.length
+                        )
+
+                        : 0;
+
+                const readerLevel =
+                    getReaderLevel(
+                        percent
+                    );
+
+                document.getElementById(
+                    "archive-stats"
+                ).innerHTML = `
+
+    <ul>
+
+        <li>
+            馆藏总数：
+            ${data.length} 篇
+        </li>
+
+        <li>
+            馆藏类别：
+            ${Object.keys(labels).length} 类
+        </li>
+
+        <li>
+            最新入藏：
+            ${latestDate}
+        </li>
+
+        <li>
+            已阅读：
+            ${readCount} 篇
+        </li>
+
+        <li>
+            阅读进度：
+            ${percent}%
+        </li>
+
+        <li>
+            阅读等级：
+            ${readerLevel}
+        </li>
+
+    </ul>
+
+`;
+
+                let collectionsHtml = "";
+
+                collections.forEach(
+                    item => {
+
+                        const count =
+
+                            labels[
+                            item.label
+                            ] || 0;
+
+                        collectionsHtml += `
+        <a
+            href="${item.url}"
+            class="collection-link"
+        >
+            <div class="collection-card">
+                <img
+                    src="${item.image}"
+                    alt="${item.title}"
+                    loading="lazy"
+                >
+                <h3>
+                    ${item.title}
+                </h3>
+                <p>
+                    ${item.description}
+                </p>
+                <p>
+                    馆藏文献：
+                    ${count} 篇
+                </p>
+                <div class="card-overlay">
+                    进入展厅 →
+                </div>
+            </div>
+        </a>
+        `;
+
+                    }
+                );
+
+                document.getElementById(
+                    "collections"
+                ).innerHTML =
+                    collectionsHtml;
+
+                /* ===== 搜索馆藏 ===== */
+
+                document.getElementById(
+                    "search-input"
+                ).addEventListener(
+
+                    "input",
+
+                    event => {
+
+                        const keyword =
+
+                            event.target.value
+                                .trim()
+                                .toLowerCase();
+
+                        const resultsBox =
+
+                            document.getElementById(
+                                "search-results"
+                            );
+
+                        if (!keyword) {
+
+                            resultsBox.innerHTML =
+                                "";
+
+                            return;
+
+                        }
+
+                        /* ===== 专题搜索 ===== */
+
+                        const labelResults = [];
+
+                        data.forEach(
+
+                            article => {
+
+                                if (
+
+                                    !article.labels ||
+
+                                    !article.label_slugs
+
+                                ) {
+
+                                    return;
+
+                                }
+
+                                article.labels.forEach(
+
+                                    (label, index) => {
+
+                                        if (
+
+                                            label
+                                                .toLowerCase()
+                                                .includes(
+                                                    keyword
+                                                )
+
+                                        ) {
+
+                                            labelResults.push({
+
+                                                parent:
+
+                                                    article.labels[0],
+
+                                                label:
+
+                                                    label,
+
+                                                slug:
+
+                                                    article
+                                                        .label_slugs[
+                                                    index
+                                                    ]
+
+                                            });
+
+                                        }
+
+                                    }
+
+                                );
+
+                            }
+
+                        );
+
+                        const uniqueLabels =
+
+                            [...new Map(
+
+                                labelResults.map(
+
+                                    item => [
+
+                                        item.slug,
+
+                                        {
+
+                                            parent:
+
+                                                item.parent,
+
+                                            label:
+
+                                                item.label,
+
+                                            slug:
+
+                                                item.slug,
+
+                                            count:
+
+                                                data.filter(
+
+                                                    article =>
+
+                                                        article.labels &&
+
+                                                        article.labels.includes(
+
+                                                            item.label
+
+                                                        )
+
+                                                ).length
+
+                                        }
+
+                                    ]
+
+                                )
+
+                            ).values()];
+
+                        const results =
+
+                            data.filter(
+                                article =>
+
+                                    article.title
+                                        .toLowerCase()
+                                        .includes(
+                                            keyword
+                                        )
+                            )
+
+                                .slice(0, 20);
+
+                        let html =
+
+                            `<p>
+                找到
+                ${results.length}
+                条结果
+            </p>`;
+
+                        /* ===== 专题结果 ===== */
+
+                        if (
+
+                            uniqueLabels.length > 0
+
+                        ) {
+
+                            html += `
+
+<h3>
+
+📁 专题
+
+</h3>
+
+`;
+
+                            uniqueLabels.forEach(
+
+                                item => {
+
+                                    html += `
+
+<p>
+
+<a href="labels/${item.slug}.html">
+
+${item.parent === item.label
+
+                                            ? item.label
+
+                                            : item.parent +
+                                            " · " +
+                                            item.label
+                                        }
+
+</a>
+
+<br>
+
+<small>
+
+共
+
+${item.count}
+
+篇文献
+
+</small>
+
+</p>
+
+`;
+
+                                }
+
+                            );
+
+                        }
+
+                        if (results.length === 0) {
+
+                            html +=
+
+                                `<p>
+                    没有找到相关文献。
+                </p>`;
+
+                        } else {
+
+                            html += "<ul>";
+
+                            results.forEach(
+                                article => {
+
+                                    let category = "未分类";
+
+                                    if (
+                                        article.labels &&
+                                        article.labels.length > 0
+                                    ) {
+
+                                        category =
+                                            article.labels[0];
+
+                                        if (
+                                            article.labels.length > 1
+                                        ) {
+
+                                            category +=
+                                                " · " +
+                                                article.labels[1];
+
+                                        }
+
+                                    }
+
+                                    html += `
+
+<li>
+
+<a href="articles/${article.filename}">
+
+${article.title}
+
+</a>
+
+<br>
+
+<small>
+
+${category}
+
+</small>
+
+</li>
+
+`;
+
+                                }
+                            );
+
+                            html += "</ul>";
+
+                        }
+
+                        resultsBox.innerHTML =
+                            html;
+
+                    }
+
+                );
+
+                document.getElementById(
+                    "clear-search"
+                ).addEventListener(
+
+                    "click",
+
+                    () => {
+
+                        document.getElementById(
+                            "search-input"
+                        ).value = "";
+
+                        document.getElementById(
+                            "search-results"
+                        ).innerHTML = "";
+
+                    }
+
+                );
+
+                /* ===== 今日推荐 ===== */
+
+                const today = new Date();
+
+                const dayNumber = Math.floor(
+                    today.getTime() /
+                    86400000
+                );
+
+                let index =
+                    dayNumber %
+                    data.length;
+
+                const unreadArticles = data.filter(
+
+                    article =>
+
+                        !archive.includes(
+
+                            "/articles/" +
+                            article.filename
+
+                        )
+
+                );
+
+                const readUrls = archive;
+
+                let article =
+                    data[index];
+
+                let count = 0;
+
+                while (
+
+                    readUrls.includes(
+
+                        "/articles/" +
+                        article.filename
+
+                    )
+
+                    &&
+
+                    count < data.length
+
+                ) {
+
+                    index =
+                        (index + 1)
+                        %
+                        data.length;
+
+                    article =
+                        data[index];
+
+                    count++;
+
+                }
+
+                const image =
+                    article.image
+                        ? article.image
+                        : "";
+
+                document.getElementById(
+                    "today-recommend"
+                ).innerHTML = `
+
+    <h2>
+        今天从哪里开始？
+    </h2>
+
+     <p class="recommend-badge">
+
+         今日推荐
+
+    </p>
+
+    <p>
+        <a href="articles/${article.filename}">
+
+            <img
+                src="${image}"
+                alt="${article.title}"
+                loading="lazy"
+                class="today-image"
+            >
+
+        </a>
+
+    </p>
+
+    <p>
+        <strong>
+            ${article.title}
+        </strong>
+    </p>
+
+    <p>
+
+    分类：
+
+    ${article.labels.join(" / ")}
+
+     </p>
+
+    <p>
+
+    发布日期：
+
+    ${article.published}
+
+     </p>
+
+    <p>
+        <a
+            href="articles/${article.filename}"
+            class="read-button"
+        >
+            开始阅读 →
+        </a>
+    </p>
+
+`;
+
+                /* ===== 最近入藏 ===== */
+
+                const recentArticles =
+
+                    [...data]
+
+                        .sort(
+
+                            (a, b) =>
+
+                                new Date(
+                                    b.published
+                                )
+
+                                -
+
+                                new Date(
+                                    a.published
+                                )
+
+                        )
+
+                        .slice(0, 5);
+
+                let recentHtml = `
+
+<h2>
+
+🆕 最近入藏
+
+</h2>
+
+<ul>
+
+`;
+
+                recentArticles.forEach(
+                    article => {
+
+                        let category = "未分类";
+
+                        if (
+                            article.labels &&
+                            article.labels.length > 0
+                        ) {
+
+                            category = article.labels[0];
+
+                            if (
+                                article.labels.length > 1
+                            ) {
+
+                                category +=
+                                    " · " +
+                                    article.labels[1];
+
+                            }
+
+                        }
+
+                        recentHtml += `
+
+<li>
+
+<a href="articles/${article.filename}">
+
+${article.title}
+
+</a>
+
+<br>
+
+<small>
+
+${category}
+
+</small>
+
+<br>
+
+<small>
+
+${article.published}
+
+</small>
+
+</li>
+
+`;
+
+                    }
+                );
+
+                recentHtml += "</ul>";
+
+                document.getElementById(
+                    "recent-additions"
+                ).innerHTML = recentHtml;
+                /* ===== 随机探索 ===== */
+
+                document.getElementById(
+                    "random-explore"
+                ).innerHTML = `
+
+<h2>
+
+🎲 随机探索
+
+</h2>
+
+<p class="explore-desc">
+
+馆藏中还有
+
+<strong>
+
+${unreadArticles.length}
+
+</strong>
+
+篇文献等待发现。
+
+</p>
+
+<p>
+
+每一次点击，
+
+都会随机打开一篇尚未阅读的内容。
+
+</p>
+
+<button id="random-button">
+
+开始探索 →
+
+</button>
+
+`;
+                document.getElementById(
+                    "random-button"
+                ).addEventListener(
+                    "click",
+                    () => {
+
+                        let pool;
+
+                        if (
+                            unreadArticles.length > 0
+                        ) {
+
+                            pool =
+                                unreadArticles;
+
+                        } else {
+
+                            pool =
+                                data;
+
+                        }
+
+                        const randomArticle =
+
+                            pool[
+                            Math.floor(
+                                Math.random()
+                                *
+                                pool.length
+                            )
+                            ];
+
+                        window.location.href =
+
+                            "articles/" +
+
+                            randomArticle.filename;
+
+                    }
+                );
+
+            });
+
+    </script>
+
+    <h2>相关链接</h2>
+
+    <ul>
+
+        <li>
+            主站：
+            <a href="https://tengkongworld.blogspot.com/">
+                https://tengkongworld.blogspot.com/
+            </a>
+        </li>
+
+    </ul>
+
+    <script>
+
+        const history = JSON.parse(
+
+            localStorage.getItem(
+                "readingHistory"
+            ) || "[]"
+
+        );
+
+        if (history.length > 0) {
+
+            const lastArticle = history[0];
+
+            const archive = JSON.parse(
+
+                localStorage.getItem(
+                    "readingArchive"
+                ) || "[]"
+
+            );
+
+            const readCount =
+                archive.length;
+
+            const totalCount = Number(
+
+                localStorage.getItem(
+                    "articleCount"
+                ) || 0
+
+            );
+
+            const percent =
+
+                totalCount > 0
+
+                    ? Math.round(
+                        readCount * 100 /
+                        totalCount
+                    )
+
+                    : 0;
+
+            const readerLevel =
+                getReaderLevel(
+                    percent
+                );
+
+            document.getElementById(
+                "continue-reading"
+            ).innerHTML = `
+
+<h2>
+
+    📖 继续阅读
+
+</h2>
+
+<p class="continue-label">
+
+    上次阅读
+
+</p>
+
+<div class="continue-title">
+
+    ${lastArticle.title}
+
+</div>
+
+<p class="continue-progress">
+
+    阅读进度：
+
+    ${percent}%
+
+</p>
+
+<p class="continue-level">
+
+    阅读等级：
+
+    ${readerLevel}
+
+</p>
+
+<p>
+
+    <a
+
+        href="${lastArticle.url}"
+
+        class="continue-button"
+
+    >
+
+        继续阅读 →
+
+    </a>
+
+</p>
+
+`;
+
+        } else {
+
+            document.getElementById(
+                "continue-reading"
+            ).style.display =
+                "none";
+
+        }
+
+        if (history.length > 0) {
+
+            let html = `
+
+        <h2>
+        最近阅读
+        </h2>
+
+        <ul>
+
+    `;
+
+            function formatDate(time) {
+
+                const date = new Date(time);
+
+                const year =
+                    date.getFullYear();
+
+                const month =
+                    String(
+                        date.getMonth() + 1
+                    ).padStart(2, "0");
+
+                const day =
+                    String(
+                        date.getDate()
+                    ).padStart(2, "0");
+
+                return `${year}-${month}-${day}`;
+
+            }
+
+            history.forEach(article => {
+
+                html +=
+                    "<li>" +
+                    "<small>" +
+                    formatDate(article.time) +
+                    "</small><br>" +
+                    '<a href="' +
+                    article.url +
+                    '">' +
+                    article.title +
+                    "</a>" +
+                    "</li>";
+
+            });
+
+            html += "</ul>";
+
+            document.getElementById(
+                "recent-reading"
+            ).innerHTML = html;
+
+        }
+
+        /* ===== 阅读主题 ===== */
+
+        document
+
+            .querySelectorAll(
+
+                "[data-theme]"
+
+            )
+
+            .forEach(button => {
+
+                button.addEventListener(
+
+                    "click",
+
+                    () => {
+
+                        setTheme(
+                            button.dataset.theme
+                        );
+
+                        document
+
+                            .querySelectorAll(
+
+                                "[data-theme]"
+
+                            )
+
+                            .forEach(btn => {
+
+                                btn.classList.remove(
+                                    "theme-active"
+                                );
+
+                            });
+
+                        button.classList.add(
+                            "theme-active"
+                        );
+
+                    }
+
+                );
+
+            });
+
+        initializeTheme();
+
+        const activeButton =
+
+            document.querySelector(
+
+                `[data-theme="${getCurrentTheme()}"]`
+
+            );
+
+        if (activeButton) {
+
+            activeButton.classList.add(
+                "theme-active"
+            );
+
+        }
+
+        /* ===== 导出阅读档案 ===== */
+
+        document.getElementById(
+            "export-reading"
+        ).addEventListener(
+
+            "click",
+
+            () => {
+
+                const archive = JSON.parse(
+
+                    localStorage.getItem(
+                        "readingArchive"
+                    ) || "[]"
+
+                );
+
+                if (archive.length === 0) {
+
+                    const confirmed = confirm(
+
+                        "当前没有阅读记录。\n\n仍然导出空白档案吗？"
+
+                    );
+
+                    if (!confirmed) {
+
+                        return;
+
+                    }
+
+                }
+
+                const backup = {
+
+                    version: "1.0",
+
+                    exportDate:
+
+                        new Date()
+
+                            .toISOString()
+
+                            .slice(0, 10),
+
+                    readingArchive:
+
+                        JSON.parse(
+
+                            localStorage.getItem(
+                                "readingArchive"
+                            ) || "[]"
+
+                        ),
+
+                    readingHistory:
+
+                        JSON.parse(
+
+                            localStorage.getItem(
+                                "readingHistory"
+                            ) || "[]"
+
+                        )
+
+                };
+
+                const blob =
+
+                    new Blob(
+
+                        [
+                            JSON.stringify(
+                                backup,
+                                null,
+                                2
+                            )
+                        ],
+
+                        {
+                            type:
+                                "application/json"
+                        }
+
+                    );
+
+                const url =
+
+                    URL.createObjectURL(
+                        blob
+                    );
+
+                const a =
+
+                    document.createElement(
+                        "a"
+                    );
+
+                a.href = url;
+
+                a.download =
+
+                    `tengkong-reading-backup-${backup.exportDate}.json`;
+
+                a.click();
+
+                URL.revokeObjectURL(
+                    url
+                );
+
+            }
+
+        );
+
+        /* ===== 导入阅读档案 ===== */
+
+        document.getElementById(
+            "import-reading"
+        ).addEventListener(
+
+            "click",
+
+            () => {
+
+                document.getElementById(
+                    "import-file"
+                ).click();
+
+            }
+
+        );
+
+        document.getElementById(
+            "import-file"
+        ).addEventListener(
+
+            "change",
+
+            event => {
+
+                const file =
+                    event.target.files[0];
+
+                if (!file) {
+
+                    return;
+
+                }
+
+                const reader =
+                    new FileReader();
+
+                reader.onload =
+                    e => {
+
+                        try {
+
+                            const backup =
+
+                                JSON.parse(
+                                    e.target.result
+                                );
+
+                            if (
+
+                                !backup.readingArchive ||
+
+                                !backup.readingHistory
+
+                            ) {
+
+                                alert(
+                                    "不是有效的阅读档案文件。"
+                                );
+
+                                return;
+
+                            }
+
+                            const confirmed =
+
+                                confirm(
+
+                                    "导入将覆盖当前阅读记录。\n\n是否继续？"
+
+                                );
+
+                            if (!confirmed) {
+
+                                return;
+
+                            }
+
+                            localStorage.setItem(
+
+                                "readingArchive",
+
+                                JSON.stringify(
+                                    backup.readingArchive
+                                )
+
+                            );
+
+                            localStorage.setItem(
+
+                                "readingHistory",
+
+                                JSON.stringify(
+                                    backup.readingHistory
+                                )
+
+                            );
+
+                            alert(
+
+                                `阅读档案恢复成功！\n\n已恢复 ${backup.readingArchive.length} 篇阅读记录。`
+
+                            );
+
+                            location.reload();
+
+                        } catch (error) {
+
+                            alert(
+
+                                "文件读取失败。"
+
+                            );
+
+                        }
+
+                    };
+
+                reader.readAsText(
+                    file
+                );
+
+            }
+
+        );
+    </script>
+</body>
+
+</html>

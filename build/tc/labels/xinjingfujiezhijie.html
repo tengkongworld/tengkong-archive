@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+    <title>《心經》佛界之解</title>
+
+
+    <link rel="alternate" hreflang="zh-CN" href="../../labels/xinjingfujiezhijie.html">
+    <link rel="alternate" hreflang="zh-TW" href="xinjingfujiezhijie.html">
+
+
+    <link
+    rel="stylesheet"
+    href="../../assets/css/theme.css">
+
+<link
+    rel="stylesheet"
+    href="../../assets/css/article.css">
+
+    <style>
+
+    #gallery-view {
+
+        display: grid;
+
+        grid-template-columns:
+
+            repeat(
+
+                auto-fill,
+
+                minmax(
+
+                    220px,
+
+                    1fr
+
+                )
+
+            );
+
+        gap: 16px;
+
+    }
+
+    .gallery-card {
+
+        border: 1px solid #ddd;
+
+        border-radius: 8px;
+
+        overflow: hidden;
+
+    }
+
+    .gallery-card img {
+
+        width: 100%;
+
+        display: block;
+
+    }
+
+    .gallery-card p {
+
+        padding: 10px;
+
+        font-weight: bold;
+
+    }
+
+    </style>
+</head>
+<body
+    data-default-view="list"
+    data-default-sort="asc"
+>
+
+<div class="language-switcher">
+    <a href="../../labels/xinjingfujiezhijie.html">简体中文</a>
+    ｜
+    <span class="current-language">繁體中文</span>
+</div>
+
+<p><a href="../index.html">首頁</a> / 《心經》佛界之解</p><h1>《心經》佛界之解</h1>
+<div id="reading-progress">
+</div>
+
+<div id="next-reading">
+</div>
+
+<p>
+<button onclick="sortAsc()">正序</button>
+<button onclick="sortDesc()">倒序</button>
+</p>
+
+<ul
+    id="article-list"
+    class="article-list">
+
+        <li
+            data-index="0"
+            data-title="《心經》佛界之解1：書中名詞解釋"
+            data-image="../../assets/images/4360911080945316519-1.jpg"
+        >
+            <span class="read-mark">○</span>
+
+            <a href="../articles/2026-07-03-xinjingfujiezhijie1-4360911080945316519.html">
+                《心經》佛界之解1：書中名詞解釋
+            </a>
+
+        </li>
+        
+        <li
+            data-index="1"
+            data-title="《心經》佛界之解1：前言，一場把《心經》講“明白”的對話"
+            data-image="../../assets/images/5413274492346912939-1.jpg"
+        >
+            <span class="read-mark">○</span>
+
+            <a href="../articles/2026-06-15-xinjingfujiezhijie1-5413274492346912939.html">
+                《心經》佛界之解1：前言，一場把《心經》講“明白”的對話
+            </a>
+
+        </li>
+        
+    </ul>
+
+             
+                                                            
+<script>                                       
+
+function showListMode() {
+
+    document.getElementById(
+        "article-list"
+    ).style.display = "block";
+
+    document.getElementById(
+        "gallery-view"
+    ).style.display = "none";
+
+    localStorage.setItem(
+        "viewMode",
+        "list"
+    );
+
+}
+
+function rebuildGallery() {
+
+    const gallery =
+        document.getElementById(
+            "gallery-view"
+        );
+
+    gallery.innerHTML = "";
+
+    const galleryItems =
+        document.querySelectorAll(
+            "#article-list li"
+        );
+
+    galleryItems.forEach(item => {
+
+        const image =
+            item.dataset.image;
+
+        const title =
+            item.dataset.title;
+
+        const link =
+            item.querySelector(
+                "a"
+            ).href;
+
+        gallery.innerHTML += `
+
+<div class="gallery-card">
+
+    <a href="${link}">
+
+        <img
+            src="${image}"
+            alt="${title}"
+        >
+
+        <p>
+            ${title}
+        </p>
+
+    </a>
+
+</div>
+
+`;
+
+    });
+
+}
+                                        
+function showGalleryMode() {
+
+    document.getElementById(
+        "article-list"
+    ).style.display = "none";
+
+    const gallery =
+        document.getElementById(
+            "gallery-view"
+        );
+
+    gallery.style.display =
+        "grid";
+
+    rebuildGallery();
+
+    localStorage.setItem(
+        "viewMode",
+        "gallery"
+    );
+
+}
+                    
+function sortAsc() {
+
+    const list =
+        document.getElementById(
+            "article-list"
+        );
+
+    const items =
+        Array.from(
+            list.children
+        );
+
+    items.sort(
+        (a, b) =>
+        Number(b.dataset.index)
+        -
+        Number(a.dataset.index)
+    );
+
+    list.innerHTML = "";
+
+    items.forEach(item => {
+
+        list.appendChild(item);
+
+    });
+
+    localStorage.setItem(
+        "sortOrder",
+        "asc"
+    );
+
+    if (
+        document.getElementById(
+            "gallery-view"
+        ).style.display !== "none"
+    ) {
+
+        rebuildGallery();
+
+    }
+
+}                    
+
+function sortDesc() {
+
+    const list =
+        document.getElementById(
+            "article-list"
+        );
+
+    const items =
+        Array.from(
+            list.children
+        );
+
+    items.sort(
+        (a, b) =>
+        Number(a.dataset.index)
+        -
+        Number(b.dataset.index)
+    );
+
+    list.innerHTML = "";
+
+    items.forEach(item => {
+
+        list.appendChild(item);
+
+    });
+
+    localStorage.setItem(
+        "sortOrder",
+        "desc"
+    );
+    if (
+    document.getElementById(
+        "gallery-view"
+    ).style.display !== "none"
+    ) {
+
+    rebuildGallery();
+
+    }                
+
+}
+
+function initializeReadingHistory() {
+
+    const history = JSON.parse(
+
+        localStorage.getItem(
+
+            "readingHistory"
+
+        ) || "[]"
+
+    );
+
+    const readTitles = history.map(
+
+        item => item.title
+
+    );
+
+    document
+
+        .querySelectorAll(
+
+            "li[data-title]"
+
+        )
+
+        .forEach(li => {
+
+            const title =
+
+                li.dataset.title;
+
+            if (
+
+                readTitles.includes(title)
+
+            ) {
+
+                li.querySelector(
+
+                    ".read-mark"
+
+                ).textContent = "✓";
+
+            }
+
+        });
+
+    const totalArticles = document
+
+        .querySelectorAll(
+
+            "li[data-title]"
+
+        ).length;
+
+    const readCount = document
+
+        .querySelectorAll(
+
+            ".read-mark"
+
+        );
+
+    let finished = 0;
+
+    readCount.forEach(mark => {
+
+        if (
+
+            mark.textContent === "✓"
+
+        ) {
+
+            finished++;
+
+        }
+
+    });
+
+    const percent = Math.round(
+
+        finished * 100 / totalArticles
+
+    );
+
+    document.getElementById(
+
+    "reading-progress"
+
+).innerHTML = `
+
+    <p>
+
+        已閱讀
+
+        ${finished}
+
+        /
+
+        ${totalArticles}
+
+        (${percent}%)
+
+    </p>
+
+    <div class="reading-options">
+
+        <div class="reading-options-group">
+
+            <span class="reading-label">
+
+                模式
+
+            </span>
+
+            <div class="reading-buttons">
+
+                <button class="theme-button" data-theme="default">
+
+                    標準
+
+                </button>
+
+                <button class="theme-button" data-theme="eye">
+
+                    護眼
+
+                </button>
+
+                <button class="theme-button" data-theme="dark">
+
+                    夜間
+
+                </button>
+
+                <button class="theme-button" data-theme="classic">
+
+                    古籍
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="reading-options-group">
+
+            <span class="reading-label">
+
+                字級
+
+            </span>
+
+            <div class="font-buttons">
+
+                <button id="font-smaller">
+
+                    A－
+
+                </button>
+
+                <span id="font-size">
+
+                    18
+
+                </span>
+
+                <button id="font-larger">
+
+                    A＋
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <hr>
+
+`;
+                    
+document
+
+    .querySelectorAll(".theme-button")
+
+    .forEach(button => {
+
+        button.addEventListener(
+
+            "click",
+
+            () => {
+
+                setTheme(
+
+                    button.dataset.theme
+
+                );
+
+            }
+
+        );
+
+    });
+
+const smaller = document.getElementById("font-smaller");
+
+const larger = document.getElementById("font-larger");
+
+if (smaller) {
+
+    smaller.onclick = () => {
+
+        let size = parseInt(
+
+            localStorage.getItem("fontSize")
+
+        ) || DEFAULT_FONT_SIZE;
+
+        if (size > MIN_FONT_SIZE) {
+
+            applyFontSize(size - 1);
+
+        }
+
+    };
+
+}
+
+if (larger) {
+
+    larger.onclick = () => {
+
+        let size = parseInt(
+
+            localStorage.getItem("fontSize")
+
+        ) || DEFAULT_FONT_SIZE;
+
+        if (size < MAX_FONT_SIZE) {
+
+            applyFontSize(size + 1);
+
+        }
+
+    };
+
+}                  
+
+}
+
+function initializeSort() {
+
+    const savedOrder =
+
+        localStorage.getItem(
+            "sortOrder"
+        );
+
+    if (
+        savedOrder === "asc"
+    ) {
+
+        sortAsc();
+
+        return;
+
+    }
+
+    if (
+        savedOrder === "desc"
+    ) {
+
+        sortDesc();
+
+        return;
+
+    }
+
+    const defaultSort =
+
+        document.body.dataset.defaultSort;
+
+    if (
+        defaultSort === "desc"
+    ) {
+
+        sortDesc();
+
+    } else {
+
+        sortAsc();
+
+    }
+
+}
+                    
+                    function initializeView() {
+
+    const savedView =
+
+        localStorage.getItem(
+            "viewMode"
+        );
+
+    if (
+        savedView === "gallery"
+    ) {
+
+        showGalleryMode();
+
+        return;
+
+    }
+
+    if (
+        savedView === "list"
+    ) {
+
+        showListMode();
+
+        return;
+
+    }
+
+    const defaultView =
+
+        document.body.dataset.defaultView;
+
+    if (
+        defaultView === "gallery"
+    ) {
+
+        showGalleryMode();
+
+    } else {
+
+        showListMode();
+
+    }
+
+}
+
+function initializePage() {
+
+    initializeReadingHistory();
+
+    initializeTheme();
+
+    initializeFontSize();
+
+    initializeSort();
+
+    initializeView();
+
+}
+                                                                                                  
+</script>
+                    
+<script src="../../assets/js/theme.js"></script>
+
+<script src="../../assets/js/article.js"></script>
+
+<script>
+
+initializePage();
+
+</script>
+
+</body>
+</html>

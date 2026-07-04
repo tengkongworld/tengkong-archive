@@ -1,0 +1,32 @@
+{
+  "collections": {
+    "腾空看到的外星人": {
+      "title": "腾空看到的外星人",
+      "default_view": "gallery",
+      "default_sort": "desc",
+      "show_in_homepage": true,
+      "show_in_exhibition": true
+    },
+    "难经": {
+      "title": "难经",
+      "default_view": "list",
+      "default_sort": "asc",
+      "show_in_homepage": true,
+      "show_in_exhibition": true
+    },
+    "心经": {
+      "title": "心经",
+      "default_view": "list",
+      "default_sort": "asc",
+      "show_in_homepage": true,
+      "show_in_exhibition": false
+    },
+    "道德经": {
+      "title": "道德经",
+      "default_view": "list",
+      "default_sort": "asc",
+      "show_in_homepage": true,
+      "show_in_exhibition": false
+    }
+  }
+}
