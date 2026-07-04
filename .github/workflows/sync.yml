@@ -41,16 +41,17 @@ jobs:
         run: |
           python scripts/sync.py
 
-      - name: Commit Changes
+            - name: Verify Build
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          echo "Checking build output..."
+          test -d build
+          test -f build/index.html
 
-          git add .
+          echo "Build directory:"
+          ls -la build
 
-          if git diff --cached --quiet; then
-            echo "No changes"
-          else
-            git commit -m "Auto update archive"
-            git push
-          fi
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: build/    
