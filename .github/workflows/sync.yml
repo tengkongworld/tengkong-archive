@@ -41,7 +41,7 @@ jobs:
         run: |
           python scripts/sync.py
 
-            - name: Verify Build
+      - name: Verify Build
         run: |
           echo "Checking build output..."
           test -d build
