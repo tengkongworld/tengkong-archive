@@ -77,4 +77,19 @@ jobs:
 
           echo "Deployment repository contents:"
 
-          ls -la deploy        
+          ls -la deploy  
+
+      - name: Commit and push deployment
+        working-directory: deploy
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add .
+
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Auto deploy website"
+            git push origin main
+          fi          
