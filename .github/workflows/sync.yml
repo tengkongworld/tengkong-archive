@@ -55,3 +55,10 @@ jobs:
         with:
           name: build-output
           path: build/    
+
+      - name: Checkout deployment repository
+        uses: actions/checkout@v4
+        with:
+          repository: tengkongworld/tengkongworld.github.io
+          token: ${{ secrets.DEPLOY_TOKEN }}
+          path: deploy    
