@@ -63,20 +63,23 @@ jobs:
           token: ${{ secrets.DEPLOY_TOKEN }}
           path: deploy
 
-      - name: Sync build to deployment repository
+      - name: Clean deployment repository
         run: |
-          echo "Cleaning deployment repository..."
+          echo "Cleaning deploy (safe mode)..."
 
-          find deploy -mindepth 1 \
-            ! -path "deploy/.git*" \
-            -delete
+          find deploy/* -maxdepth 0 \
+            -not -name ".git" \
+            -exec rm -rf {} +
 
-          echo "Copy build..."
+          echo "Deploy cleaned"
+
+      - name: Copy build to deployment repository
+        run: |
+          echo "Copying build..."
 
           cp -R build/. deploy/
 
           echo "Deployment repository contents:"
-
           ls -la deploy  
 
       - name: Commit and push deployment
