@@ -25,7 +25,7 @@ def generate_homepage(
     if language == "zh-tw":
         html = replace_language_switcher(
             html,
-            "簡體中文",
+            "简体中文",
             "繁體中文",
             current_language="zh-tw",
         )
@@ -50,8 +50,12 @@ def replace_language_switcher(
     current_language,
 ):
     """Render stable, clickable homepage language links."""
-    simplified_class = ' class="current-language"' if current_language == "zh-cn" else ""
-    traditional_class = ' class="current-language"' if current_language == "zh-tw" else ""
+    simplified_class = (
+        ' class="current-language"' if current_language == "zh-cn" else ""
+    )
+    traditional_class = (
+        ' class="current-language"' if current_language == "zh-tw" else ""
+    )
 
     language_switcher = f"""<div class="language-switcher">
         <a href="/"{simplified_class}>{simplified_text}</a>
@@ -69,4 +73,4 @@ def replace_language_switcher(
     if end == -1:
         return html
 
-    return html[:start] + language_switcher + html[end + len("</div>"):]
+    return html[:start] + language_switcher + html[end + len("</div>") :]

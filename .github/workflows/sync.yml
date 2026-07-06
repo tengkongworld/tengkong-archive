@@ -25,23 +25,29 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          path: tengkong-archive
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
+          cache-dependency-path: tengkong-archive/requirements.txt
 
       - name: Install Dependencies
+        working-directory: tengkong-archive
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run Sync Script
+        working-directory: tengkong-archive
         run: |
-          python scripts/sync.py
+          python3 scripts/sync.py
 
       - name: Verify Build
+        working-directory: tengkong-archive
         run: |
           echo "Checking build output..."
           test -d build
@@ -54,45 +60,22 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-output
-          path: build/    
+          path: tengkong-archive/build/
 
       - name: Checkout deployment repository
         uses: actions/checkout@v4
         with:
           repository: tengkongworld/tengkongworld.github.io
           token: ${{ secrets.DEPLOY_TOKEN }}
-          path: deploy
+          path: tengkongworld.github.io
 
-      - name: Clean deployment repository
-        run: |
-          echo "Cleaning deploy (safe mode)..."
-
-          find deploy/* -maxdepth 0 \
-            -not -name ".git" \
-            -exec rm -rf {} +
-
-          echo "Deploy cleaned"
-
-      - name: Copy build to deployment repository
-        run: |
-          echo "Copying build..."
-
-          cp -R build/. deploy/
-
-          echo "Deployment repository contents:"
-          ls -la deploy  
-
-      - name: Commit and push deployment
-        working-directory: deploy
+      - name: Configure deployment git identity
+        working-directory: tengkongworld.github.io
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          git add .
-
-          if git diff --cached --quiet; then
-            echo "No changes"
-          else
-            git commit -m "Auto deploy website"
-            git push origin main
-          fi          
+      - name: Deploy generated site
+        working-directory: tengkong-archive
+        run: |
+          python3 deploy.py

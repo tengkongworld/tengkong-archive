@@ -29,6 +29,19 @@ Fully automated CI/CD pipeline.
 5. Commit & push changes
 6. GitHub Pages updates automatically
 
+Run the complete deployment from this repository only:
+
+```bash
+python3 deploy.py
+```
+
+Deployment rules:
+
+- `tengkong-archive` is the only source of truth.
+- `tengkongworld.github.io` is a pure deployment target.
+- Do not manually edit, merge, or rebase inside `tengkongworld.github.io`.
+- Each deploy resets the deployment repo to `origin/main`, replaces its contents with `build/`, commits, and pushes.
+
 ---
 
 ## Output Structure
