@@ -1,6 +1,7 @@
 import re
+import hashlib
 
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit, urlunsplit
 
 from pypinyin import lazy_pinyin
 
@@ -14,6 +15,7 @@ from config import (
 )
 from feed import fetch_feed
 from generators.article import generate_html_files
+from generators.homepage import generate_homepage
 from generators.label import generate_label_pages
 from converters.opencc_converter import to_traditional
 
@@ -23,7 +25,6 @@ from urllib.request import urlretrieve
 
 BUILD_DIR = "build"
 OUTPUT_FILE = os.path.join(BUILD_DIR, "data", "articles.json")
-SOURCE_OUTPUT_FILE = "data/articles.json"
 
 
 def build_path(*parts):
@@ -33,22 +34,48 @@ def build_path(*parts):
 
 def prepare_build_dir():
     """Create a fresh build directory with static site assets."""
+    cached_images = None
+    cached_images_path = build_path("assets", "images")
+
+    if os.path.exists(cached_images_path):
+        cached_images = os.path.join("/tmp", "tengkong-archive-image-cache")
+
+        if os.path.exists(cached_images):
+            shutil.rmtree(cached_images)
+
+        shutil.copytree(cached_images_path, cached_images)
+
     if os.path.exists(BUILD_DIR):
         shutil.rmtree(BUILD_DIR)
 
     os.makedirs(BUILD_DIR, exist_ok=True)
 
-    shutil.copy2("index.html", build_path("index.html"))
+    # 创建 data 目录（关键修复）
+    os.makedirs(build_path("data"), exist_ok=True)
 
-    if os.path.exists("tc/index.html"):
-        os.makedirs(build_path("tc"), exist_ok=True)
-        shutil.copy2("tc/index.html", build_path("tc", "index.html"))
+    homepage_source_files = (
+        "homepage.json",
+        "homepage_tc.json",
+    )
+
+    for filename in homepage_source_files:
+        source_path = os.path.join("data", filename)
+        destination_path = build_path("data", filename)
+
+        if not os.path.exists(source_path):
+            raise FileNotFoundError(f"缺少手动首页配置文件：{source_path}")
+
+        # copy each homepage source into the build data directory
+        shutil.copy2(source_path, destination_path)
 
     if os.path.exists("assets"):
-        shutil.copytree("assets", build_path("assets"))
+        # copytree with dirs_exist_ok to avoid errors if target exists (Py3.8+)
+        shutil.copytree("assets", build_path("assets"), dirs_exist_ok=True)
 
-    if os.path.exists("data"):
-        shutil.copytree("data", build_path("data"))
+    if cached_images:
+        os.makedirs(build_path("assets"), exist_ok=True)
+        shutil.copytree(cached_images, cached_images_path)
+        shutil.rmtree(cached_images)
 
 
 prepare_build_dir()
@@ -93,8 +120,62 @@ def convert_articles(
     return articles_new
 
 
+def normalize_image_url(img_url):
+    """Return a stable full-size URL for cache identity."""
+    img_url = re.sub(r"/s\d+/", "/s0/", img_url)
+
+    img_url = re.sub(r"/w\d+-h\d+/", "/s0/", img_url)
+
+    img_url = re.sub(r"=w\d+-h\d+$", "=s0", img_url)
+
+    parts = urlsplit(img_url)
+
+    return urlunsplit((parts.scheme, parts.netloc, parts.path, parts.query, ""))
+
+
+def get_image_extension(img_url):
+    """Return a conservative image extension for a URL."""
+    path = urlsplit(img_url).path.lower()
+
+    match = re.search(r"\.(jpg|jpeg|png|gif|webp)$", path)
+
+    if match:
+        extension = match.group(1)
+
+        if extension == "jpeg":
+            return "jpg"
+
+        return extension
+
+    return "jpg"
+
+
+def get_image_cache_filename(img_url):
+    """Return a stable cache filename for a logical image URL."""
+    normalized_url = normalize_image_url(img_url)
+
+    digest = hashlib.sha1(normalized_url.encode("utf-8")).hexdigest()[:16]
+
+    return f"{digest}.{get_image_extension(normalized_url)}"
+
+
+def prepare_article_image_filenames(articles):
+    """Attach stable image filenames used by render and download steps."""
+    for article in articles:
+        imgs = re.findall(r'<img[^>]+src="([^"]+)"', article["content"])
+
+        article["_image_filenames"] = [
+            get_image_cache_filename(img_url) for img_url in imgs
+        ]
+
+
 def get_article_image_filename(article, index):
     """Return the local filename for an article image."""
+    image_filenames = article.get("_image_filenames", [])
+
+    if 0 < index <= len(image_filenames):
+        return image_filenames[index - 1]
+
     return f"{article['id']}-{index}.jpg"
 
 
@@ -130,7 +211,9 @@ def build_article_filename(article):
 
 def download_images(articles):
 
-    os.makedirs(build_path("assets", "images"), exist_ok=True)
+    image_dir = build_path("assets", "images")
+
+    os.makedirs(image_dir, exist_ok=True)
 
     total = 0
 
@@ -140,11 +223,7 @@ def download_images(articles):
         for index, img_url in enumerate(imgs, start=1):
             original_url = img_url
 
-            img_url = re.sub(r"/s\d+/", "/s0/", img_url)
-
-            img_url = re.sub(r"/w\d+-h\d+/", "/s0/", img_url)
-
-            img_url = re.sub(r"=w\d+-h\d+$", "=s0", img_url)
+            img_url = normalize_image_url(img_url)
 
             if (
                 original_url == img_url
@@ -156,7 +235,7 @@ def download_images(articles):
 
             filename = get_article_image_filename(article, index)
 
-            filepath = build_path("assets", "images", filename)
+            filepath = os.path.join(image_dir, filename)
 
             if os.path.exists(filepath):
                 continue
@@ -189,6 +268,36 @@ def download_images(articles):
     print("新增图片:", total)
 
 
+def cleanup_unused_images(articles):
+    """Remove generated image files that are no longer referenced."""
+    image_dir = build_path("assets", "images")
+
+    if not os.path.exists(image_dir):
+        return
+
+    used_filenames = set()
+
+    for article in articles:
+        used_filenames.update(article.get("_image_filenames", []))
+
+    removed = 0
+
+    for filename in os.listdir(image_dir):
+        filepath = os.path.join(image_dir, filename)
+
+        if not os.path.isfile(filepath):
+            continue
+
+        if filename in used_filenames:
+            continue
+
+        os.remove(filepath)
+        removed += 1
+
+    if removed:
+        print("清理旧图片:", removed)
+
+
 feed_articles = fetch_feed()
 
 
@@ -199,9 +308,6 @@ feed_articles = fetch_feed()
 existing_articles = []
 
 existing_output_file = OUTPUT_FILE
-
-if not os.path.exists(existing_output_file):
-    existing_output_file = SOURCE_OUTPUT_FILE
 
 if os.path.exists(existing_output_file):
     try:
@@ -237,6 +343,10 @@ articles_tc = convert_articles(articles, to_traditional)
 articles.sort(key=lambda x: x["published"], reverse=True)
 
 articles_tc.sort(key=lambda x: x["published"], reverse=True)
+
+prepare_article_image_filenames(articles)
+
+prepare_article_image_filenames(articles_tc)
 
 for article in articles_tc:
     imgs = re.findall(r'<img[^>]+src="([^"]+)"', article["content"])
@@ -276,16 +386,47 @@ for article in articles_tc:
 
 os.makedirs(build_path("data"), exist_ok=True)
 
+articles_json = [
+    {key: value for key, value in article.items() if not key.startswith("_")}
+    for article in articles
+]
+
+articles_tc_json = [
+    {key: value for key, value in article.items() if not key.startswith("_")}
+    for article in articles_tc
+]
+
+for article in articles_tc_json:
+    if article.get("image"):
+        article["image"] = "../" + article["image"]
+
 with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-    json.dump(articles, f, ensure_ascii=False, indent=2)
+    json.dump(articles_json, f, ensure_ascii=False, indent=2)
 
 with open(build_path("data", "articles_tc.json"), "w", encoding="utf-8") as f:
     json.dump(
-        articles_tc,
+        articles_tc_json,
         f,
         ensure_ascii=False,
         indent=2,
     )
+
+generate_homepage(
+    "index.html",
+    build_path("index.html"),
+    "data/articles.json",
+    "data/homepage.json",
+)
+
+generate_homepage(
+    "index.html",
+    build_path("tc", "index.html"),
+    "../data/articles_tc.json",
+    "../data/homepage_tc.json",
+    asset_prefix="..",
+    converter=to_traditional,
+    language="zh-tw",
+)
 
 
 print()
@@ -361,5 +502,6 @@ generate_label_pages(
 )
 
 download_images(articles)
+cleanup_unused_images(articles)
 print()
 print("静态HTML数量:", len(articles))

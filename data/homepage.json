@@ -1,0 +1,30 @@
+[
+  {
+    "title": "弥勒菩萨《难经》系列",
+    "image": "/assets/images2/nanjing.jpg",
+    "description": "全书600余章，目前正在更新中。目前更新的篇章包括《难经》人间难篇、世间难篇、神难篇、心神难篇、鬼难篇",
+    "url": "/labels/nanjing.html",
+    "label": "难经"
+  },
+  {
+    "title": "《心经》佛界之解",
+    "image": "/assets/images2/xinjing.jpg",
+    "description": "目前正在更新《心经》佛界之解1",
+    "url": "/labels/xinjingfujiezhijie.html",
+    "label": "《心经》佛界之解1"
+  },
+  {
+    "title": "老子再传《道德经》佛界版",
+    "image": "/assets/images2/daodejing.jpg",
+    "description": "全书81章，目前正在更新中",
+    "url": "/labels/daodejingfujieban.html",
+    "label": "《道德经》佛界版"
+  },
+  {
+    "title": "腾空看到的外星人",
+    "image": "/assets/images2/waixingren.jpg",
+    "description": "第一部25章，目前已经更新完成",
+    "url": "/labels/tengkongkandaodewaixingren.html",
+    "label": "腾空看到的外星人"
+  }
+]
