@@ -1,2 +1,5 @@
 .DS_Store
 assets/**/.DS_Store
+.DS_Store
+.deploy_state.json
+.feed_state.json
